@@ -4,7 +4,7 @@
 /********************* 微秒级延时封装（加static消除原型警告） *********************/
 static void OPT3001_DelayUs(u32 us)
 {
-    Delay_us(us); // 调用通用延时函数
+    Delay_us(us+10); // 调用通用延时函数
 }
 
 /********************* IIC底层驱动实现 *********************/
@@ -49,28 +49,30 @@ void OPT3001_IIC_Stop(void)
 }
 
 // IIC等待应答（返回1：无应答，0：有应答）
+// IIC等待应答
 u8 OPT3001_IIC_WaitAck(void)
 {
     u8 timeout = 0;
     
-    IIC_SDA_HIGH();  // 释放SDA，由从机控制
+    SDA_IN();        // 【关键】切为输入模式，STM32停止强压3.3V
     OPT3001_DelayUs(1);
     IIC_SCL_HIGH();
     OPT3001_DelayUs(1);
     
-    // 等待从机拉低SDA
-    while(IIC_SDA_READ())
+    while(IIC_SDA_READ()) // 此时 OPT3004 就能轻松把 SDA 拉低了
     {
         timeout++;
         if(timeout > 250)
         {
             OPT3001_IIC_Stop();
-            return 1;  // 超时无应答
+            SDA_OUT(); // 【关键】超时退出前切回输出
+            return 1; 
         }
     }
     
-    IIC_SCL_LOW();  // 拉低SCL，结束应答检测
-    return 0;       // 有应答
+    IIC_SCL_LOW(); 
+    SDA_OUT();       // 【关键】收到应答后，切回推挽输出准备下一步发送
+    return 0;       
 }
 
 // IIC发送应答（ack=0：发送应答，ack=1：发送非应答）
@@ -111,25 +113,28 @@ void OPT3001_IIC_SendByte(u8 byte)
 }
 
 // IIC接收一个字节（ack=0：发送应答，ack=1：发送非应答）
+// IIC接收一个字节
 u8 OPT3001_IIC_ReceiveByte(u8 ack)
 {
     u8 i, byte = 0;
     
-    IIC_SDA_HIGH();  // 释放SDA，由从机控制
+    SDA_IN();        // 【关键】准备接收数据，切为输入模式
+    
     for(i=0; i<8; i++)
     {
         IIC_SCL_LOW();
         OPT3001_DelayUs(1);
-        IIC_SCL_HIGH();  // 高电平期间，读取SDA电平
+        IIC_SCL_HIGH();  
         byte <<= 1;
         if(IIC_SDA_READ())
             byte |= 0x01;
         OPT3001_DelayUs(1);
     }
-    OPT3001_IIC_SendAck(ack);  // 发送应答
+    
+    SDA_OUT();       // 【关键】8位全部读完，切回输出模式以发送应答(ACK)
+    OPT3001_IIC_SendAck(ack);  
     return byte;
 }
-
 /********************* OPT3001传感器驱动实现 *********************/
 // 写OPT3001寄存器（16位数据）
 u8 OPT3001_WriteReg(u8 reg_addr, u16 data)
@@ -205,6 +210,13 @@ u8 OPT3001_Init(void)
     // - 其余位：默认值
     config = 0xCE00;
     
+	// 1. 测试写入（如果这步报错，说明地址不对、线没接好、或没收到ACK）
+    if(OPT3001_WriteReg(OPT3001_CONFIG_REG, config) != 0)
+    {
+        //printf("Debug: I2C通信失败，未收到ACK响应\r\n");
+        return 1;  
+    }
+	
     // 写入配置寄存器
     if(OPT3001_WriteReg(OPT3001_CONFIG_REG, config) != 0)
         return 1;  // 初始化失败

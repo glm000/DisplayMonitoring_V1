@@ -17,6 +17,13 @@
 #define OPT3001_HIGH_LIMIT_REG 0x03    // 上限阈值寄存器
 
 /********************* IIC底层操作宏 *********************/
+/********************* IIC底层操作宏 *********************/
+// PB6 动态方向切换宏
+// SDA_IN: 清除原有配置 -> 设为上拉/下拉输入 -> ODR写1开启内部微弱上拉
+#define SDA_IN()  {GPIOB->CRL &= 0xF0FFFFFF; GPIOB->CRL |= (u32)8<<24; GPIOB->ODR |= 1<<6;}  
+// SDA_OUT: 设为推挽输出 50MHz
+#define SDA_OUT() {GPIOB->CRL &= 0xF0FFFFFF; GPIOB->CRL |= (u32)3<<24;}  
+
 #define IIC_SCL_HIGH()  GPIO_SetBits(OPT3001_IIC_PORT, OPT3001_IIC_SCL_PIN)
 #define IIC_SCL_LOW()   GPIO_ResetBits(OPT3001_IIC_PORT, OPT3001_IIC_SCL_PIN)
 #define IIC_SDA_HIGH()  GPIO_SetBits(OPT3001_IIC_PORT, OPT3001_IIC_SDA_PIN)

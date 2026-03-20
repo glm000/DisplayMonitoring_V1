@@ -48,19 +48,40 @@ void USART1_Init(u32 baudrate)
     USART_Cmd(USART1, ENABLE);
 }
 
+
+void I2C_Scan_Test(void)
+{
+    u8 addr;
+    printf("\r\n--- 启动 I2C 总线扫描 ---\r\n");
+    for(addr = 1; addr < 128; addr++)
+    {
+        OPT3001_IIC_Start();
+        OPT3001_IIC_SendByte(addr << 1); // 发送写地址
+        if(OPT3001_IIC_WaitAck() == 0)   // 如果返回 0 说明有真实应答
+        {
+            printf("成功找到设备！真实地址为: 0x%02X\r\n", addr);
+        }
+        OPT3001_IIC_Stop();
+        Delay_ms(2);
+    }
+    printf("--- 扫描结束 ---\r\n");
+}
+
 float lux;
 int main(void)
 {
     OPT3001_StatusTypeDef sensor_status;
 
     SysTick_Init();
-    USART1_Init(115200);
+    USART1_Init(9600);
 
     if(OPT3001_Init() == 0)
         printf("OPT3001初始化成功！\r\n");
     else
         printf("OPT3001初始化失败！\r\n");
 
+		I2C_Scan_Test();
+		
     while(1)
     {
         // 调用带异常处理的读取函数
