@@ -49,7 +49,7 @@ void USART1_Init(u32 baudrate)
 }
 
 
-void I2C_Scan_Test(void)
+static void I2C_Scan_Test(void)
 {
     u8 addr;
     printf("\r\n--- 启动 I2C 总线扫描 ---\r\n");

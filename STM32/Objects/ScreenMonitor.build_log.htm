@@ -5,11 +5,11 @@
 <h2>Tool Versions:</h2>
 IDE-Version: ��Vision V5.39.0.0
 Copyright (C) 2023 ARM Ltd and ARM Germany GmbH. All rights reserved.
-License Information: ggg ggg, ggg, LIC=8VRJ7-E5H5X-UHU8H-WRWYV-QM63L-KR9CI
+License Information: gg glm, gg, LIC=ZB4EI-TN0AY-Y8EFK-Z8E36-9UMXV-Z5413
  
 Tool Versions:
 Toolchain:       MDK-ARM Plus  Version: 5.39.0.0
-Toolchain Path:  D:\Keil5\ARM\ARMCLANG\Bin
+Toolchain Path:  C:\Keil5\ARM\ARMCLANG\Bin
 C Compiler:      ArmClang.exe V6.21
 Assembler:       Armasm.exe V6.21
 Linker/Locator:  ArmLink.exe V6.21
@@ -17,59 +17,29 @@ Library Manager: ArmAr.exe V6.21
 Hex Converter:   FromElf.exe V6.21
 CPU DLL:         SARMCM3.DLL V5.39.0.0
 Dialog DLL:      DCM.DLL V1.17.5.0
-Target DLL:      STLink\ST-LINKIII-KEIL_SWO.dll V3.2.0.0
+Target DLL:      UL2CM3.DLL V1.164.9.0
 Dialog DLL:      TCM.DLL V1.56.4.0
  
 <h2>Project:</h2>
-E:\GLM\2026��\��ʾ�������Ŀ\DisplayMonitoring_V1\STM32\ScreenMonitor.uvprojx
-Project File Date:  03/20/2026
+C:\Users\glm\Desktop\STM32\ScreenMonitor.uvprojx
+Project File Date:  04/12/2026
 
 <h2>Output:</h2>
-*** Using Compiler 'V6.21', folder: 'D:\Keil5\ARM\ARMCLANG\Bin'
+*** Using Compiler 'V6.21', folder: 'C:\Keil5\ARM\ARMCLANG\Bin'
 Rebuild target 'Target 1'
-User/main.c(52): warning: no previous prototype for function 'I2C_Scan_Test' [-Wmissing-prototypes]
-   52 | void I2C_Scan_Test(void)
-      |      ^
-User/main.c(52): note: declare 'static' if the function is not intended to be used outside of this translation unit
-   52 | void I2C_Scan_Test(void)
-      | ^
-      | static 
-1 warning generated.
 compiling main.c...
 compiling delay.c...
-Hardware/opt3001.c(57): warning: empty expression statement has no effect; remove unnecessary ';' to silence this warning [-Wextra-semi-stmt]
-   57 |     SDA_IN();        // 【关键】切为输入模式，STM32停止强压3.3V
-      |             ^
-Hardware/opt3001.c(68): warning: empty expression statement has no effect; remove unnecessary ';' to silence this warning [-Wextra-semi-stmt]
-   68 |             SDA_OUT(); // 【关键】超时退出前切回输出
-      |                      ^
-Hardware/opt3001.c(74): warning: empty expression statement has no effect; remove unnecessary ';' to silence this warning [-Wextra-semi-stmt]
-   74 |     SDA_OUT();       // 【关键】收到应答后，切回推挽输出准备下一步发送
-      |              ^
-Hardware/opt3001.c(121): warning: empty expression statement has no effect; remove unnecessary ';' to silence this warning [-Wextra-semi-stmt]
-  121 |     SDA_IN();        // 【关键】准备接收数据，切为输入模式
-      |             ^
-Hardware/opt3001.c(134): warning: empty expression statement has no effect; remove unnecessary ';' to silence this warning [-Wextra-semi-stmt]
-  134 |     SDA_OUT();       // 【关键】8位全部读完，切回输出模式以发送应答(ACK)
-      |              ^
-Hardware/opt3001.c(319): warning: comparing floating point with == or != is unsafe [-Wfloat-equal]
-  319 |         if(raw_lux != -1.0f) break;  // 读取成功则退出重试
-      |            ~~~~~~~ ^  ~~~~~
-Hardware/opt3001.c(323): warning: comparing floating point with == or != is unsafe [-Wfloat-equal]
-  323 |     if(raw_lux == -1.0f)
-      |        ~~~~~~~ ^  ~~~~~
-7 warnings generated.
-compiling opt3001.c...
-compiling misc.c...
-compiling stm32f10x_usart.c...
-compiling system_stm32f10x.c...
-compiling stm32f10x_i2c.c...
 compiling stm32f10x_gpio.c...
+compiling stm32f10x_i2c.c...
+compiling misc.c...
 compiling stm32f10x_rcc.c...
-assembling startup_stm32f10x_md.s...
+compiling opt3001.c...
+compiling system_stm32f10x.c...
+assembling startup_stm32f10x_hd.s...
+compiling stm32f10x_usart.c...
 linking...
-Program Size: Code=9018 RO-data=646 RW-data=8 ZI-data=1056  
-".\Objects\ScreenMonitor.axf" - 0 Error(s), 8 Warning(s).
+Program Size: Code=9010 RO-data=714 RW-data=8 ZI-data=1056  
+".\Objects\ScreenMonitor.axf" - 0 Error(s), 0 Warning(s).
 
 <h2>Software Packages used:</h2>
 
@@ -91,45 +61,45 @@ Package Vendor: Keil
    * Component: USART Version: 3.6.0
 
 <h2>Collection of Component include folders:</h2>
-  ./RTE/Device/STM32F103C8
+  ./RTE/Device/STM32F103ZE
   ./RTE/_Target_1
-  D:/Keil5/packs/ARM/CMSIS/5.9.0/CMSIS/Core/Include
-  D:/Keil5/packs/Keil/STM32F1xx_DFP/2.4.1/Device/Include
-  D:/Keil5/packs/Keil/STM32F1xx_DFP/2.4.1/Device/StdPeriph_Driver/inc
+  C:/Keil5/packs/ARM/CMSIS/5.9.0/CMSIS/Core/Include
+  C:/Keil5/packs/Keil/STM32F1xx_DFP/2.4.1/Device/Include
+  C:/Keil5/packs/Keil/STM32F1xx_DFP/2.4.1/Device/StdPeriph_Driver/inc
 
 <h2>Collection of Component Files used:</h2>
 
    * Component: ARM::CMSIS:CORE@5.6.0
 
    * Component: Keil::Device:Startup@1.0.0
-      Source file:   Device/Source/system_stm32f10x.c
       Source file:   Device/Source/ARM/STM32F1xx_OPT.s
-      Source file:   Device/Source/ARM/startup_stm32f10x_md.s
       Include file:  RTE_Driver/Config/RTE_Device.h
+      Source file:   Device/Source/system_stm32f10x.c
+      Source file:   Device/Source/ARM/startup_stm32f10x_hd.s
 
    * Component: Keil::Device:StdPeriph Drivers:Framework@3.6.0
-      Source file:   Device/StdPeriph_Driver/templates/stm32f10x_conf.h
-      Source file:   Device/StdPeriph_Driver/src/misc.c
-      Include file:  Device/StdPeriph_Driver/templates/stm32f10x_it.h
-      Include file:  Device/StdPeriph_Driver/inc/misc.h
       Source file:   Device/StdPeriph_Driver/templates/stm32f10x_it.c
+      Source file:   Device/StdPeriph_Driver/src/misc.c
+      Include file:  Device/StdPeriph_Driver/inc/misc.h
+      Include file:  Device/StdPeriph_Driver/templates/stm32f10x_it.h
+      Source file:   Device/StdPeriph_Driver/templates/stm32f10x_conf.h
 
    * Component: Keil::Device:StdPeriph Drivers:GPIO@3.6.0
       Include file:  Device/StdPeriph_Driver/inc/stm32f10x_gpio.h
       Source file:   Device/StdPeriph_Driver/src/stm32f10x_gpio.c
 
    * Component: Keil::Device:StdPeriph Drivers:I2C@3.6.0
-      Include file:  Device/StdPeriph_Driver/inc/stm32f10x_i2c.h
       Source file:   Device/StdPeriph_Driver/src/stm32f10x_i2c.c
+      Include file:  Device/StdPeriph_Driver/inc/stm32f10x_i2c.h
 
    * Component: Keil::Device:StdPeriph Drivers:RCC@3.6.0
-      Source file:   Device/StdPeriph_Driver/src/stm32f10x_rcc.c
       Include file:  Device/StdPeriph_Driver/inc/stm32f10x_rcc.h
+      Source file:   Device/StdPeriph_Driver/src/stm32f10x_rcc.c
 
    * Component: Keil::Device:StdPeriph Drivers:USART@3.6.0
       Include file:  Device/StdPeriph_Driver/inc/stm32f10x_usart.h
       Source file:   Device/StdPeriph_Driver/src/stm32f10x_usart.c
-Build Time Elapsed:  00:00:02
+Build Time Elapsed:  00:00:07
 </pre>
 </body>
 </html>

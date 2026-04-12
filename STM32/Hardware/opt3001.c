@@ -54,7 +54,7 @@ u8 OPT3001_IIC_WaitAck(void)
 {
     u8 timeout = 0;
     
-    SDA_IN();        // 【关键】切为输入模式，STM32停止强压3.3V
+    SDA_IN()        // 【关键】切为输入模式，STM32停止强压3.3V
     OPT3001_DelayUs(1);
     IIC_SCL_HIGH();
     OPT3001_DelayUs(1);
@@ -65,13 +65,13 @@ u8 OPT3001_IIC_WaitAck(void)
         if(timeout > 250)
         {
             OPT3001_IIC_Stop();
-            SDA_OUT(); // 【关键】超时退出前切回输出
+            SDA_OUT() // 【关键】超时退出前切回输出
             return 1; 
         }
     }
     
     IIC_SCL_LOW(); 
-    SDA_OUT();       // 【关键】收到应答后，切回推挽输出准备下一步发送
+    SDA_OUT()       // 【关键】收到应答后，切回推挽输出准备下一步发送
     return 0;       
 }
 
@@ -118,7 +118,7 @@ u8 OPT3001_IIC_ReceiveByte(u8 ack)
 {
     u8 i, byte = 0;
     
-    SDA_IN();        // 【关键】准备接收数据，切为输入模式
+    SDA_IN()        // 【关键】准备接收数据，切为输入模式
     
     for(i=0; i<8; i++)
     {
@@ -131,7 +131,7 @@ u8 OPT3001_IIC_ReceiveByte(u8 ack)
         OPT3001_DelayUs(1);
     }
     
-    SDA_OUT();       // 【关键】8位全部读完，切回输出模式以发送应答(ACK)
+    SDA_OUT()       // 【关键】8位全部读完，切回输出模式以发送应答(ACK)
     OPT3001_IIC_SendAck(ack);  
     return byte;
 }
@@ -316,11 +316,11 @@ float OPT3001_ReadLux_WithFilter(void)
     while(retry_cnt < OPT3001_MAX_RETRY)
     {
         raw_lux = OPT3001_ReadLux(); // 调用原读取函数
-        if(raw_lux != -1.0f) break;  // 读取成功则退出重试
+        if(raw_lux >= 0.0f) break;  // 读取成功则退出重试
         retry_cnt++;
         Delay_ms(10);                // 重试间隔（避免频繁读取）
     }
-    if(raw_lux == -1.0f)
+    if(raw_lux < 0.0f)
     {
         opt3001_status = OPT3001_STATUS_COMM_ERR;
         return last_valid_lux;       // 沿用上次有效值，避免数据中断
