@@ -17,7 +17,7 @@ Library Manager: ArmAr.exe V6.21
 Hex Converter:   FromElf.exe V6.21
 CPU DLL:         SARMCM3.DLL V5.39.0.0
 Dialog DLL:      DCM.DLL V1.17.5.0
-Target DLL:      UL2CM3.DLL V1.164.9.0
+Target DLL:      STLink\ST-LINKIII-KEIL_SWO.dll V3.2.0.0
 Dialog DLL:      TCM.DLL V1.56.4.0
  
 <h2>Project:</h2>
@@ -27,18 +27,23 @@ Project File Date:  04/12/2026
 <h2>Output:</h2>
 *** Using Compiler 'V6.21', folder: 'C:\Keil5\ARM\ARMCLANG\Bin'
 Rebuild target 'Target 1'
-compiling main.c...
+compiling opt3001.c...
 compiling delay.c...
 compiling stm32f10x_gpio.c...
-compiling stm32f10x_i2c.c...
 compiling misc.c...
-compiling stm32f10x_rcc.c...
-compiling opt3001.c...
+compiling usart.c...
+compiling main.c...
+compiling opt101.c...
+compiling stm32f10x_i2c.c...
 compiling system_stm32f10x.c...
-assembling startup_stm32f10x_hd.s...
 compiling stm32f10x_usart.c...
+compiling stm32f10x_rcc.c...
+assembling startup_stm32f10x_hd.s...
+compiling stm32f10x_adc.c...
+compiling stm32f10x_dma.c...
+compiling stm32f10x_tim.c...
 linking...
-Program Size: Code=9010 RO-data=714 RW-data=8 ZI-data=1056  
+Program Size: Code=13054 RO-data=1474 RW-data=8 ZI-data=5048  
 ".\Objects\ScreenMonitor.axf" - 0 Error(s), 0 Warning(s).
 
 <h2>Software Packages used:</h2>
@@ -54,10 +59,13 @@ Package Vendor: Keil
                 Keil::STM32F1xx_DFP@2.4.1
                 STMicroelectronics STM32F1 Series Device Support, Drivers and Examples
    * Component: Startup Version: 1.0.0
+   * Component: ADC Version: 3.6.0
+   * Component: DMA Version: 3.6.0
    * Component: Framework Version: 3.6.0
    * Component: GPIO Version: 3.6.0
    * Component: I2C Version: 3.6.0
    * Component: RCC Version: 3.6.0
+   * Component: TIM Version: 3.6.0
    * Component: USART Version: 3.6.0
 
 <h2>Collection of Component include folders:</h2>
@@ -72,34 +80,46 @@ Package Vendor: Keil
    * Component: ARM::CMSIS:CORE@5.6.0
 
    * Component: Keil::Device:Startup@1.0.0
+      Source file:   Device/Source/ARM/startup_stm32f10x_hd.s
+      Source file:   Device/Source/system_stm32f10x.c
       Source file:   Device/Source/ARM/STM32F1xx_OPT.s
       Include file:  RTE_Driver/Config/RTE_Device.h
-      Source file:   Device/Source/system_stm32f10x.c
-      Source file:   Device/Source/ARM/startup_stm32f10x_hd.s
+
+   * Component: Keil::Device:StdPeriph Drivers:ADC@3.6.0
+      Include file:  Device/StdPeriph_Driver/inc/stm32f10x_adc.h
+      Source file:   Device/StdPeriph_Driver/src/stm32f10x_adc.c
+
+   * Component: Keil::Device:StdPeriph Drivers:DMA@3.6.0
+      Include file:  Device/StdPeriph_Driver/inc/stm32f10x_dma.h
+      Source file:   Device/StdPeriph_Driver/src/stm32f10x_dma.c
 
    * Component: Keil::Device:StdPeriph Drivers:Framework@3.6.0
       Source file:   Device/StdPeriph_Driver/templates/stm32f10x_it.c
-      Source file:   Device/StdPeriph_Driver/src/misc.c
-      Include file:  Device/StdPeriph_Driver/inc/misc.h
-      Include file:  Device/StdPeriph_Driver/templates/stm32f10x_it.h
       Source file:   Device/StdPeriph_Driver/templates/stm32f10x_conf.h
+      Source file:   Device/StdPeriph_Driver/src/misc.c
+      Include file:  Device/StdPeriph_Driver/templates/stm32f10x_it.h
+      Include file:  Device/StdPeriph_Driver/inc/misc.h
 
    * Component: Keil::Device:StdPeriph Drivers:GPIO@3.6.0
-      Include file:  Device/StdPeriph_Driver/inc/stm32f10x_gpio.h
       Source file:   Device/StdPeriph_Driver/src/stm32f10x_gpio.c
+      Include file:  Device/StdPeriph_Driver/inc/stm32f10x_gpio.h
 
    * Component: Keil::Device:StdPeriph Drivers:I2C@3.6.0
-      Source file:   Device/StdPeriph_Driver/src/stm32f10x_i2c.c
       Include file:  Device/StdPeriph_Driver/inc/stm32f10x_i2c.h
+      Source file:   Device/StdPeriph_Driver/src/stm32f10x_i2c.c
 
    * Component: Keil::Device:StdPeriph Drivers:RCC@3.6.0
       Include file:  Device/StdPeriph_Driver/inc/stm32f10x_rcc.h
       Source file:   Device/StdPeriph_Driver/src/stm32f10x_rcc.c
 
+   * Component: Keil::Device:StdPeriph Drivers:TIM@3.6.0
+      Source file:   Device/StdPeriph_Driver/src/stm32f10x_tim.c
+      Include file:  Device/StdPeriph_Driver/inc/stm32f10x_tim.h
+
    * Component: Keil::Device:StdPeriph Drivers:USART@3.6.0
-      Include file:  Device/StdPeriph_Driver/inc/stm32f10x_usart.h
       Source file:   Device/StdPeriph_Driver/src/stm32f10x_usart.c
-Build Time Elapsed:  00:00:07
+      Include file:  Device/StdPeriph_Driver/inc/stm32f10x_usart.h
+Build Time Elapsed:  00:00:09
 </pre>
 </body>
 </html>

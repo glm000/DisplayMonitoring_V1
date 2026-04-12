@@ -60,7 +60,7 @@ float OPT3001_ReadLux(void);
 #define OPT3001_MAX_RETRY    3       // 通信异常重试次数
 #define OPT3001_MIN_VAL      0.01f   // 传感器最小有效量程
 #define OPT3001_MAX_VAL      83886.08f // 传感器最大有效量程
-#define OPT3001_JUMP_THRESH  500.0f  // 跳变阈值（可根据场景调整）
+#define OPT3001_JUMP_THRESH  60000.0f  // 跳变阈值（可根据场景调整）
 #define FILTER_WINDOW_SIZE   3       // 滑动窗口大小（3~5为宜）
 
 // 传感器状态枚举

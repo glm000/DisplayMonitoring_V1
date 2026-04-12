@@ -1,4 +1,4 @@
-./objects/system_stm32f10x.o: RTE\Device\STM32F103ZE\system_stm32f10x.c \
+./objects/opt101.o: Hardware\opt101.c Hardware\opt101.h \
   C:\Keil5\packs\Keil\STM32F1xx_DFP\2.4.1\Device\Include\stm32f10x.h \
   C:\Keil5\packs\ARM\CMSIS\5.9.0\CMSIS\Core\Include\core_cm3.h \
   C:\Keil5\ARM\ARMCLANG\include\stdint.h \
@@ -14,4 +14,5 @@
   C:\Keil5\packs\Keil\STM32F1xx_DFP\2.4.1\Device\StdPeriph_Driver\inc\stm32f10x_rcc.h \
   C:\Keil5\packs\Keil\STM32F1xx_DFP\2.4.1\Device\StdPeriph_Driver\inc\stm32f10x_tim.h \
   C:\Keil5\packs\Keil\STM32F1xx_DFP\2.4.1\Device\StdPeriph_Driver\inc\stm32f10x_usart.h \
-  C:\Keil5\packs\Keil\STM32F1xx_DFP\2.4.1\Device\StdPeriph_Driver\inc\misc.h
+  C:\Keil5\packs\Keil\STM32F1xx_DFP\2.4.1\Device\StdPeriph_Driver\inc\misc.h \
+  Hardware\delay.h
