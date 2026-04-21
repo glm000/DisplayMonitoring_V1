@@ -8,7 +8,8 @@
 // 定义系统运行模式
 typedef enum {
     MODE_IDLE = 0,             // 待机模式
-    MODE_OPT3001_CONTINUOUS    // 连续测量亮度模式
+    MODE_OPT3001_CONTINUOUS,    // 连续测量亮度模式
+	  MODE_OPT101_VERIFY         // 连续验证 OPT101 电压模式
 } SystemMode_t;
 
 int main(void)
@@ -44,6 +45,7 @@ int main(void)
     printf(" [B] : 单次测量屏幕亮度 (OPT3001)\r\n");
     printf(" [C] : 连续监控屏幕亮度 (OPT3001)\r\n");
     printf(" [R] : 捕获灰阶响应时间 (OPT101)\r\n");
+		printf(" [V] : 验证 OPT101 实时电压 \r\n"); 
     printf(" [S] : 停止连续监控并待机\r\n");
     printf("==============================\r\n");
 
@@ -101,7 +103,12 @@ int main(void)
                         printf(">> [OPT101] 分析失败：未检测到明显跳变，或环境噪声过大。\r\n");
                     }
                     break;
-                    
+										// ---- 指令 V：连续验证 OPT101 电压 ----
+										case 'v':
+										case 'V':
+												current_mode = MODE_OPT101_VERIFY;
+												printf(">> [系统] 进入 OPT101 电压验证模式 (发送 'S' 停止)...\r\n");
+										    break;
                 // ---- 指令 S：停止与待机 ----
                 case 's':
                 case 'S':
@@ -131,6 +138,27 @@ int main(void)
             
             // 采样间隔 100ms（与 OPT3001 的转换周期对齐）
             Delay_ms(100); 
+        }
+				else if (current_mode == MODE_OPT101_VERIFY)
+        {
+            // OPT101 连续电压验证逻辑
+            OPT101_StartCapture(); 
+            
+            // 阻塞等待 200ms 录制完成 (作为天然的打印间隔)
+            while(!OPT101_IsCaptureDone()); 
+            
+            // 累加 2000 个采样点以求平均值
+            uint32_t sum = 0;
+            for(int i = 0; i < OPT101_BUFFER_SIZE; i++) {
+                sum += opt101_adc_buffer[i];
+            }
+            uint16_t avg_adc = sum / OPT101_BUFFER_SIZE;
+            
+            // 核心公式：将 ADC 读数 (0-4095) 转换为 实际电压 (0-3.3V)
+            float calc_vol = ((float)avg_adc / 4095.0f) * 3.3f;
+            
+            // 打印结果，方便与万用表对比
+            printf("ADC原始值: %4d | 软件换算电压: %.3f V\r\n", avg_adc, (double)calc_vol);
         }
     }
 }
