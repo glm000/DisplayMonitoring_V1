@@ -146,13 +146,14 @@ OPT101_ResultTypeDef OPT101_AnalyzeBuffer(void)
     }
     result.valid = 1;
     
-    // 3. 判断是上升沿还是下降沿（比较前20个点和后20个点的平均值）
-    for(i = 0; i < 20; i++) {
+    // 3. 判断是上升沿还是下降沿
+    // 【修改】将对比窗口从 20 个点拉大到 200 个点 (对应 20ms，恰好覆盖大部分60Hz屏幕的一帧周期，能完美滤除频闪)
+    for(i = 0; i < 200; i++) {
         start_avg += opt101_adc_buffer[i];
         end_avg += opt101_adc_buffer[OPT101_BUFFER_SIZE - 1 - i];
     }
-    start_avg /= 20;
-    end_avg /= 20;
+    start_avg /= 200;
+    end_avg /= 200;
     
     result.is_rising = (end_avg > start_avg) ? 1 : 0;
     

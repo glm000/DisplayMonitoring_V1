@@ -11,7 +11,7 @@
 
 // 采样配置
 #define OPT101_SAMPLE_RATE_HZ 10000 // 采样率 10kHz (分辨率 100us)
-#define OPT101_BUFFER_SIZE    2000  // 缓冲区大小，记录 200ms 的波形
+#define OPT101_BUFFER_SIZE    10000 // 【修改】缓冲区大小，从2000改为10000，记录 1秒 的波形
 
 // 响应时间分析结果结构体
 typedef struct {

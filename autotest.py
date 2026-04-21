@@ -1,114 +1,156 @@
-import tkinter as tk
 import serial
-import threading
 import time
+import tkinter as tk
+import matplotlib.pyplot as plt
 
-# ================= 配置区 =================
-COM_PORT = 'COM5'         # 请修改为你实际连接单片机的串口号
-BAUD_RATE = 115200        # 与单片机保持一致
-SWITCH_INTERVAL_MS = 2000  # 自动切换的时间间隔（毫秒），2000ms=2秒
-# ==========================================
+# ================= 1. 串口配置 =================
+SERIAL_PORT = 'COM5'
+BAUD_RATE = 115200
 
-# 尝试连接串口
 try:
-    ser = serial.Serial(COM_PORT, BAUD_RATE, timeout=0.5)
-    print(f"成功连接到 {COM_PORT} @ {BAUD_RATE} bps")
+    print(f">> 正在连接串口 {SERIAL_PORT}...")
+    ser = serial.Serial()
+    ser.port = SERIAL_PORT
+    ser.baudrate = BAUD_RATE
+    ser.timeout = 2
+    ser.dtr = False
+    ser.rts = False
+    ser.open()
+    time.sleep(2)  # 等待 STM32 开机就绪
+    ser.reset_input_buffer()
+    print(">> 串口已连接！\n")
 except Exception as e:
-    print(f"串口打开失败，请检查端口是否被占用: {e}")
-    ser = None
+    print(f"串口打开失败: {e}")
+    exit()
 
-# 后台线程：持续读取单片机返回的分析结果
+# ================= 2. 核心控制与数据收集逻辑 =================
 
 
-def read_serial():
+def run_test():
+    print("="*50)
+    print("--- 启动单次【白 -> 黑】(下降沿) 波形抓取 ---")
+
+    # 1. 初始状态：全白（G255），给光电传感器和运放充足的时间达到饱和稳态
+    canvas.itemconfig(rect, fill="white")
+    root.update()
+    time.sleep(1.0)
+
+    ser.reset_input_buffer()
+
+    # 2. 通知 STM32 开启 1 秒高频视窗
+    ser.write(b'R\r\n')
+    print(">> [ T=0.00s ] 已发送指令 'R'，快门已打开...")
+
+    # 3. 盲区延迟 50ms（让波形开头保留一段平稳的白色高电平）
+    time.sleep(0.05)
+
+    # 4. 瞬间切黑 (白 -> 黑跳变)
+    canvas.itemconfig(rect, fill="black")
+    root.update()
+    print(">> [ T=0.05s ] 屏幕已瞬间切黑！")
+
+    print(">> 正在等待 STM32 计算并传输 10000 个数据点 (约需 5~6 秒)...")
+
+    raw_data = []
+    is_recording = False
+
+    # 5. 循环读取串口数据
     while True:
-        if ser and ser.in_waiting:
+        try:
+            line = ser.readline().decode('utf-8', errors='ignore').strip()
+        except:
+            continue
+
+        if not line:
+            continue
+
+        # 打印 STM32 算出来的结果
+        if "响应时间" in line or "稳态" in line or "跳变方向" in line:
+            print(f"   [STM32] {line}")
+
+        # 侦测数据流起始和结束标志
+        if "--- RAW_DATA_START ---" in line:
+            is_recording = True
+            print(">> 开始接收高频波形数据，请稍候...")
+            continue
+        elif "--- RAW_DATA_END ---" in line:
+            print(f">> 数据传输完毕！成功接收 {len(raw_data)} 个点。")
+            break
+
+        # 记录原始数据
+        if is_recording:
             try:
-                line = ser.readline().decode('utf-8', errors='ignore').strip()
-                if line:
-                    print(f"[STM32] {line}")
-            except Exception:
-                pass
-        time.sleep(0.01)
+                raw_data.append(int(line))
+            except ValueError:
+                pass  # 过滤掉可能的乱码杂质
 
-
-if ser:
-    # 启动后台读取线程
-    t = threading.Thread(target=read_serial, daemon=True)
-    t.start()
-
-is_auto_running = False  # 记录当前是否在自动运行
-
-# 核心自动切换动作
-
-
-def perform_switch():
-    if not is_auto_running:
-        return  # 如果已经暂停，则停止循环
-
-    # 获取当前屏幕颜色，决定下一次的颜色
-    current_color = root.cget("bg")
-    next_color = "white" if current_color == "black" else "black"
-
-    if ser:
-        ser.reset_input_buffer()
-        # 1. 瞬间发送抓捕指令
-        ser.write(b'R')
-
-    # 2. 瞬间切换屏幕颜色 (紧跟在串口发送之后)
-    root.config(bg=next_color)
-    root.update()  # 强制立刻刷新屏幕
-
-    direction = "黑 -> 白 (上升沿)" if next_color == "white" else "白 -> 黑 (下降沿)"
-    print(f"\n>> [自动测试] 触发抓取: {direction}")
-
-    # 3. 安排下一次自动切换
-    root.after(SWITCH_INTERVAL_MS, perform_switch)
-
-# 启动/暂停控制
-
-
-def toggle_auto_mode(event=None):
-    global is_auto_running
-    if not is_auto_running:
-        is_auto_running = True
-        print(">> 开始自动测试循环...")
-        perform_switch()  # 立即执行一次并开启循环
-    else:
-        is_auto_running = False
-        print(">> 已暂停自动测试。再次按下【空格键】恢复。")
-
-# 退出程序
-
-
-def exit_app(event=None):
-    global is_auto_running
-    is_auto_running = False  # 停止循环
-    if ser:
-        ser.close()
+    # 6. 数据收集完毕，关闭全屏窗口，开始画图
     root.destroy()
+    plot_waveform(raw_data)
+
+# ================= 3. 波形绘图引擎 =================
 
 
-# ================= GUI 初始化 =================
+def plot_waveform(data):
+    if len(data) < 100:
+        print("未收到足够的波形数据！")
+        return
+
+    # 将 ADC 值 (0-4095) 换算成电压值 (0-3.3V)
+    voltages = [(val / 4095.0) * 3.3 for val in data]
+
+    # 构建时间轴 (10000个点，每个点相距 0.1ms)
+    times = [i * 0.1 for i in range(len(data))]
+
+    # 估算波形的峰值和谷值 (取前100个点和后100个点的均值)
+    v_max_avg = sum(voltages[:100]) / 100
+    v_min_avg = sum(voltages[-100:]) / 100
+
+    # 计算 10% 和 90% 的阈值电压
+    v90 = v_min_avg + (v_max_avg - v_min_avg) * 0.9
+    v10 = v_min_avg + (v_max_avg - v_min_avg) * 0.1
+
+    # 初始化图表 (使用英文标签避免乱码)
+    plt.figure(figsize=(12, 6))
+
+    # 画出主波形
+    plt.plot(times, voltages, color='#007acc',
+             linewidth=1.5, label='OPT101 Signal')
+
+    # 画出 10% 和 90% 的基准线
+    plt.axhline(y=v90, color='red', linestyle='--',
+                alpha=0.7, label='90% Threshold')
+    plt.axhline(y=v10, color='green', linestyle='--',
+                alpha=0.7, label='10% Threshold')
+
+    plt.title('Display Fall Time ($T_f$) Waveform: White -> Black',
+              fontsize=14, fontweight='bold')
+    plt.xlabel('Time (ms)', fontsize=12)
+    plt.ylabel('Sensor Output Voltage (V)', fontsize=12)
+    plt.grid(True, which='both', linestyle=':', alpha=0.6)
+    plt.legend(loc='upper right')
+
+    # 限制 X 轴显示范围 (为了看清跳变细节，只显示前 300 毫秒)
+    plt.xlim(0, 300)
+
+    plt.tight_layout()
+    print(">> 正在渲染波形图...")
+    plt.show()
+
+
+# ================= 4. UI 启动 =================
 root = tk.Tk()
-# 设置全屏无边框
-root.attributes('-fullscreen', True)
-# 隐藏鼠标光标（防止光标影响光照传感器）
+root.attributes("-fullscreen", True)
 root.config(cursor="none")
-# 初始颜色设为纯黑
-root.config(bg="black")
+canvas = tk.Canvas(root, highlightthickness=0)
+canvas.pack(fill="both", expand=True)
+rect = canvas.create_rectangle(0, 0, root.winfo_screenwidth(
+), root.winfo_screenheight(), fill="white")  # 初始为白
 
-# 绑定快捷键
-root.bind('<space>', toggle_auto_mode)  # 空格键现在变成了 启动/暂停 的开关
-root.bind('<Escape>', exit_app)        # 按 Esc 键退出
+print(">> UI 已就绪。请将 OPT101 传感器紧贴屏幕！")
+print(">> 3 秒后将自动进行【白 -> 黑】跳变测试并生成图表...")
 
-print("\n===========================================")
-print("全自动屏幕测试程序已启动。")
-print(f"当前设定的切换间隔为: {SWITCH_INTERVAL_MS} 毫秒")
-print("1. 请将 OPT101 传感器紧贴在屏幕中央，并做好遮光。")
-print("2. 按下【空格键】启动/暂停自动黑白交替测试。")
-print("3. 按下【Esc 键】退出测试。")
-print("===========================================\n")
-
-# 进入主循环
+root.after(3000, run_test)
 root.mainloop()
+
+ser.close()

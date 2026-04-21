@@ -81,7 +81,7 @@ int main(void)
                 case 'r':
                 case 'R':
                     current_mode = MODE_IDLE; // 停止其他任务，专注捕获
-                    printf(">> [OPT101] 正在抓捕瞬态波形 (耗时 200ms)...\r\n");
+									  printf(">> [OPT101] 正在抓捕瞬态波形 (耗时 %dms)...\r\n", (OPT101_BUFFER_SIZE * 1000 / OPT101_SAMPLE_RATE_HZ));
                     
                     OPT101_StartCapture(); // 启动定时器和 DMA
                     
@@ -97,6 +97,14 @@ int main(void)
                         printf("   稳态基准: 谷值=%d, 峰值=%d (基于12位ADC)\r\n", res.v_min, res.v_max);
                         printf("   响应时间: %.3f ms (10%% ~ 90%%)\r\n", (double)res.time_ms);
                         printf("---------------------------------------\r\n");
+											  // 【新增】：向电脑发送 10000 个原始 ADC 数据  
+											//  在 115200 波特率下，传完 1 万个数字大概需要 5 到 6 秒钟，请让它飞一会儿。 如果需要上位机显示波形则保留这段，如果不需要显示波形，则删除这段
+												printf("--- RAW_DATA_START ---\r\n");
+												for(int i = 0; i < OPT101_BUFFER_SIZE; i++) {
+														// 以纯文本数字的形式逐行发送
+														printf("%d\r\n", opt101_adc_buffer[i]); 
+												}
+												printf("--- RAW_DATA_END ---\r\n");
                     }
                     else
                     {
