@@ -4,6 +4,7 @@
 ".\objects\delay.o"
 ".\objects\usart.o"
 ".\objects\opt101.o"
+".\objects\push_rod.o"
 ".\objects\misc.o"
 ".\objects\stm32f10x_adc.o"
 ".\objects\stm32f10x_dma.o"

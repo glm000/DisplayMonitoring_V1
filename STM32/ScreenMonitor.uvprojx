@@ -434,6 +434,16 @@
               <FileType>5</FileType>
               <FilePath>.\Hardware\opt101.h</FilePath>
             </File>
+            <File>
+              <FileName>push_rod.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Hardware\push_rod.c</FilePath>
+            </File>
+            <File>
+              <FileName>push_rod.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\Hardware\push_rod.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

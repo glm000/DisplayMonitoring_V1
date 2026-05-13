@@ -1,4 +1,4 @@
-./objects/main.o: User\main.c \
+./objects/push_rod.o: Hardware\push_rod.c Hardware\push_rod.h \
   C:\Keil5\packs\Keil\STM32F1xx_DFP\2.4.1\Device\Include\stm32f10x.h \
   C:\Keil5\packs\ARM\CMSIS\5.9.0\CMSIS\Core\Include\core_cm3.h \
   C:\Keil5\ARM\ARMCLANG\include\stdint.h \
@@ -15,5 +15,4 @@
   C:\Keil5\packs\Keil\STM32F1xx_DFP\2.4.1\Device\StdPeriph_Driver\inc\stm32f10x_tim.h \
   C:\Keil5\packs\Keil\STM32F1xx_DFP\2.4.1\Device\StdPeriph_Driver\inc\stm32f10x_usart.h \
   C:\Keil5\packs\Keil\STM32F1xx_DFP\2.4.1\Device\StdPeriph_Driver\inc\misc.h \
-  Hardware\push_rod.h Hardware\delay.h Hardware\usart.h \
-  C:\Keil5\ARM\ARMCLANG\include\stdio.h
+  Hardware\delay.h C:\Keil5\ARM\ARMCLANG\include\stdio.h

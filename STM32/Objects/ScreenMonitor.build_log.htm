@@ -22,32 +22,33 @@ Dialog DLL:      TCM.DLL V1.56.4.0
  
 <h2>Project:</h2>
 C:\Users\glm\Desktop\STM32\ScreenMonitor.uvprojx
-Project File Date:  04/21/2026
+Project File Date:  04/29/2026
 
 <h2>Output:</h2>
 *** Using Compiler 'V6.21', folder: 'C:\Keil5\ARM\ARMCLANG\Bin'
 Rebuild target 'Target 1'
-compiling delay.c...
-User/main.c(159): warning: mixing declarations and code is incompatible with standards before C99 [-Wdeclaration-after-statement]
-  159 |             uint32_t sum = 0;
-      |                      ^
-1 warning generated.
-compiling main.c...
+compiling push_rod.c...
 compiling opt101.c...
 compiling usart.c...
 compiling misc.c...
+Hardware/delay.c(51): warning: mixing declarations and code is incompatible with standards before C99 [-Wdeclaration-after-statement]
+   51 |         u32 temp;
+      |             ^
+1 warning generated.
+compiling delay.c...
 compiling opt3001.c...
-compiling stm32f10x_adc.c...
-compiling stm32f10x_dma.c...
-compiling stm32f10x_i2c.c...
+compiling main.c...
 compiling stm32f10x_gpio.c...
-compiling system_stm32f10x.c...
-compiling stm32f10x_usart.c...
+compiling stm32f10x_dma.c...
+compiling stm32f10x_adc.c...
+compiling stm32f10x_i2c.c...
 compiling stm32f10x_rcc.c...
+compiling stm32f10x_usart.c...
 compiling stm32f10x_tim.c...
 assembling startup_stm32f10x_hd.s...
+compiling system_stm32f10x.c...
 linking...
-Program Size: Code=13610 RO-data=1682 RW-data=8 ZI-data=21048  
+Program Size: Code=6634 RO-data=1430 RW-data=8 ZI-data=1032  
 ".\Objects\ScreenMonitor.axf" - 0 Error(s), 1 Warning(s).
 
 <h2>Software Packages used:</h2>
@@ -84,24 +85,24 @@ Package Vendor: Keil
    * Component: ARM::CMSIS:CORE@5.6.0
 
    * Component: Keil::Device:Startup@1.0.0
-      Source file:   Device/Source/ARM/startup_stm32f10x_hd.s
-      Source file:   Device/Source/ARM/STM32F1xx_OPT.s
-      Include file:  RTE_Driver/Config/RTE_Device.h
       Source file:   Device/Source/system_stm32f10x.c
+      Source file:   Device/Source/ARM/STM32F1xx_OPT.s
+      Source file:   Device/Source/ARM/startup_stm32f10x_hd.s
+      Include file:  RTE_Driver/Config/RTE_Device.h
 
    * Component: Keil::Device:StdPeriph Drivers:ADC@3.6.0
-      Source file:   Device/StdPeriph_Driver/src/stm32f10x_adc.c
       Include file:  Device/StdPeriph_Driver/inc/stm32f10x_adc.h
+      Source file:   Device/StdPeriph_Driver/src/stm32f10x_adc.c
 
    * Component: Keil::Device:StdPeriph Drivers:DMA@3.6.0
-      Include file:  Device/StdPeriph_Driver/inc/stm32f10x_dma.h
       Source file:   Device/StdPeriph_Driver/src/stm32f10x_dma.c
+      Include file:  Device/StdPeriph_Driver/inc/stm32f10x_dma.h
 
    * Component: Keil::Device:StdPeriph Drivers:Framework@3.6.0
-      Include file:  Device/StdPeriph_Driver/inc/misc.h
       Source file:   Device/StdPeriph_Driver/templates/stm32f10x_conf.h
-      Source file:   Device/StdPeriph_Driver/templates/stm32f10x_it.c
+      Include file:  Device/StdPeriph_Driver/inc/misc.h
       Include file:  Device/StdPeriph_Driver/templates/stm32f10x_it.h
+      Source file:   Device/StdPeriph_Driver/templates/stm32f10x_it.c
       Source file:   Device/StdPeriph_Driver/src/misc.c
 
    * Component: Keil::Device:StdPeriph Drivers:GPIO@3.6.0
@@ -123,7 +124,7 @@ Package Vendor: Keil
    * Component: Keil::Device:StdPeriph Drivers:USART@3.6.0
       Include file:  Device/StdPeriph_Driver/inc/stm32f10x_usart.h
       Source file:   Device/StdPeriph_Driver/src/stm32f10x_usart.c
-Build Time Elapsed:  00:00:09
+Build Time Elapsed:  00:00:12
 </pre>
 </body>
 </html>
